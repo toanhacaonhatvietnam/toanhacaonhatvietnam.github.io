@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landmark 81 - Tòa nhà cao nhất Sài Gòn</title>
+  <style>
+    /* Màu mặc định (Giao diện Sáng) */
+    :root {
+      --bg: #f0f4f8;
+      --card: #ffffff;
+      --text: #1e293b;
+      --primary: #0284c7;
+      --border: #cbd5e1;
+    }
+
+    /* Màu khi bật chế độ Tối */
+    body.dark {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f1f5f9;
+      --primary: #38bdf8;
+      --border: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      transition: 0.3s;
+      line-height: 1.6;
+    }
+
+    /* Thanh trên cùng */
+    .top-bar {
+      background-color: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .btn {
+      background-color: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Nội dung chính */
+    .container {
+      max-width: 850px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    .box {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      color: var(--primary);
+      margin-bottom: 12px;
+      font-size: 20px;
+    }
+
+    /* Khung hình ảnh */
+    .gallery {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .gallery img {
+      width: calc(50% - 6px);
+      height: 220px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    /* Khung video YouTube phát tại chỗ */
+    .video-box {
+      position: relative;
+      padding-bottom: 56.25%; /* Tỉ lệ 16:9 */
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    .video-box iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Chân trang & Bảng thành viên */
+    footer {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 20;
+    }
+
+    .modal-content {
+      background-color: var(--card);
+      color: var(--text);
+      padding: 25px;
+      border-radius: 10px;
+      width: 320px;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+
+    .modal-content h3 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+
+    .modal-content ul {
+      list-style: none;
+      margin-bottom: 15px;
+    }
+
+    .modal-content li {
+      padding: 6px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    /* Hiệu ứng tuyết rơi */
+    .snowflake {
+      position: fixed;
+      top: -20px;
+      color: #93c5fd;
+      user-select: none;
+      pointer-events: none;
+      z-index: 999;
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(105vh);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Thanh thời gian thực & Nút Sáng/Tối -->
+  <div class="top-bar">
+    <div id="clock">Đang tải thời gian...</div>
+    <button class="btn" id="themeBtn" onclick="doiGiaoDien()">🌙 Chế độ tối</button>
+  </div>
+
+  <!-- Nội dung chính -->
+  <div class="container">
+    <div class="box">
+      <h1>🏙️ LANDMARK 81 - BIỂU TƯỢNG SÀI GÒN</h1>
+      <p>
+        <b>Landmark 81</b> là tòa nhà chọc trời cao nhất Việt Nam và nằm trong top những tòa nhà cao nhất Đông Nam Á. 
+        Tọa lạc tại quận Bình Thạnh, TP. Hồ Chí Minh, công trình lấy cảm hứng từ hình ảnh lũy tre truyền thống vươn cao.
+      </p>
+      <br>
+      <ul>
+        <li><b>Chiều cao:</b> 461,2 mét</li>
+        <li><b>Số tầng:</b> 81 tầng nổi và 3 tầng hầm</li>
+        <li><b>Khánh thành:</b> Năm 2018</li>
+      </ul>
+    </div>
+
+    <!-- Khu vực Hình ảnh -->
+    <div class="box">
+      <h2>📸 Hình ảnh nổi bật</h2>
+      <div class="gallery">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Landmark_81_from_Saigon_Bridge.jpg/800px-Landmark_81_from_Saigon_Bridge.jpg" alt="Landmark 81 ban ngày">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Landmark_81_at_night.jpg/800px-Landmark_81_at_night.jpg" alt="Landmark 81 ban đêm">
+      </div>
+    </div>
+
+    <!-- Khu vực Video phát trực tiếp -->
+    <div class="box">
+      <h2>🎬 Video toàn cảnh Landmark 81</h2>
+      <div class="video-box">
+        <iframe src="https://www.youtube.com/embed/jiE-lopB0Js" title="Vincom Landmark 81" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nút Thành viên nhóm ở dưới cùng -->
+  <footer>
+    <button class="btn" onclick="moDanhSach()">👥 Thành viên nhóm</button>
+  </footer>
+
+  <!-- Hộp thoại danh sách thành viên -->
+  <div class="modal" id="groupModal" onclick="dongDanhSach(event)">
+    <div class="modal-content">
+      <h3>THÀNH VIÊN NHÓM</h3>
+      <ul>
+        <li>1. 👑 <b>Hà Văn Thành</b></li>
+        <li>2. Tạ Nữ Yến Nhi</li>
+        <li>3. Nguyễn Thị Hoài Linh</li>
+        <li>4. Nguyễn Hoài Băng</li>
+      </ul>
+      <button class="btn" style="width: 100%;" onclick="document.getElementById('groupModal').style.display='none'">Đóng</button>
+    </div>
+  </div>
+
+  <script>
+    // 1. Đồng hồ thời gian thực & lời chào
+    function capNhatThoiGian() {
+      const now = new Date();
+      const gio = now.getHours();
+      let loiChao = "";
+
+      if (gio >= 5 && gio < 11) {
+        loiChao = "Chào buổi sáng ⛅️";
+      } else if (gio >= 11 && gio < 14) {
+        loiChao = "Chào buổi trưa ☀️";
+      } else if (gio >= 14 && gio < 18) {
+        loiChao = "Chào buổi chiều 🌤️";
+      } else {
+        loiChao = "Chào buổi tối 🌙";
+      }
+
+      const thoiGian = now.toLocaleTimeString("vi-VN") + " - " + now.toLocaleDateString("vi-VN");
+      document.getElementById("clock").innerHTML = `<b>${loiChao}</b> | ${thoiGian}`;
+    }
+    setInterval(capNhatThoiGian, 1000);
+    capNhatThoiGian();
+
+    // 2. Chuyển chế độ Sáng / Tối
+    function doiGiaoDien() {
+      document.body.classList.toggle("dark");
+      const btn = document.getElementById("themeBtn");
+      if (document.body.classList.contains("dark")) {
+        btn.innerText = "☀️ Chế độ sáng";
+      } else {
+        btn.innerText = "🌙 Chế độ tối";
+      }
+    }
+
+    // 3. Mở / Đóng danh sách thành viên
+    function moDanhSach() {
+      document.getElementById("groupModal").style.display = "flex";
+    }
+    function dongDanhSach(e) {
+      if (e.target.id === "groupModal") {
+        document.getElementById("groupModal").style.display = "none";
+      }
+    }
+
+    // 4. Hiệu ứng tuyết rơi đơn giản
+    function taoTuyet() {
+      const tuyet = document.createElement("div");
+      tuyet.className = "snowflake";
+      tuyet.innerText = "❄";
+      tuyet.style.left = Math.random() * 100 + "vw";
+      tuyet.style.fontSize = (Math.random() * 12 + 10) + "px";
+      tuyet.style.animationDuration = (Math.random() * 4 + 4) + "s";
+      document.body.appendChild(tuyet);
+
+      setTimeout(() => {
+        tuyet.remove();
+      }, 8000);
+    }
+    setInterval(taoTuyet, 400);
+  </script>
+
+</body>
+</html>
