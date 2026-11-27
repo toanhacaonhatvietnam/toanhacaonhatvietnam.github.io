@@ -3,46 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Landmark 81 - Tòa nhà cao nhất Sài Gòn</title>
+  <title>Landmark 81 - Chủ đề Giáng Sinh</title>
   <style>
-    /* Màu mặc định (Giao diện Sáng) */
+    /* Bảng màu chủ đề Giáng Sinh - Chế độ Sáng (Tuyết & Đỏ Noel) */
     :root {
-      --bg: #f0f4f8;
+      --bg: #fff5f5;
+      --bg-gradient: linear-gradient(180deg, #ffe4e6 0%, #f0fdf4 100%);
       --card: #ffffff;
       --text: #1e293b;
-      --primary: #0284c7;
-      --border: #cbd5e1;
+      --primary: #dc2626;      /* Đỏ Giáng Sinh */
+      --secondary: #15803d;    /* Xanh lá thông */
+      --gold: #d97706;         /* Vàng chuông Noel */
+      --border: #fecaca;
       --subtext: #64748b;
+      --snow-color: #93c5fd;
     }
 
-    /* Màu khi bật chế độ Tối */
+    /* Bảng màu chủ đề Giáng Sinh - Chế độ Tối (Đêm Đông Lung Linh) */
     body.dark {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --text: #f1f5f9;
-      --primary: #38bdf8;
-      --border: #334155;
-      --subtext: #94a3b8;
+      --bg: #09131f;
+      --bg-gradient: linear-gradient(180deg, #09131f 0%, #132a1c 100%);
+      --card: #111e2e;
+      --text: #f8fafc;
+      --primary: #f87171;
+      --secondary: #4ade80;
+      --gold: #fbbf24;
+      --border: #274436;
+      --subtext: #cbd5e1;
+      --snow-color: #ffffff;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
     }
 
     body {
+      background: var(--bg-gradient);
       background-color: var(--bg);
       color: var(--text);
-      transition: 0.3s;
-      line-height: 1.6;
+      transition: background 0.4s, color 0.4s;
+      line-height: 1.65;
+      min-height: 100vh;
     }
 
-    /* Thanh trên cùng */
+    /* Dải đèn nháy Noel trang trí trên cùng */
+    .noel-lights {
+      display: flex;
+      justify-content: space-around;
+      padding: 4px 0;
+      background: var(--card);
+      border-bottom: 1px dashed var(--border);
+      overflow: hidden;
+    }
+
+    .bulb {
+      width: 10px;
+      height: 14px;
+      border-radius: 50%;
+      animation: blink 1.4s infinite alternate;
+    }
+
+    .bulb:nth-child(3n+1) { background: #ef4444; box-shadow: 0 0 8px #ef4444; animation-delay: 0s; }
+    .bulb:nth-child(3n+2) { background: #22c55e; box-shadow: 0 0 8px #22c55e; animation-delay: 0.4s; }
+    .bulb:nth-child(3n+3) { background: #facc15; box-shadow: 0 0 8px #facc15; animation-delay: 0.8s; }
+
+    @keyframes blink {
+      0% { opacity: 0.35; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1.15); }
+    }
+
+    /* Thanh thời gian thực & nút Sáng/Tối */
     .top-bar {
       background-color: var(--card);
-      border-bottom: 1px solid var(--border);
+      border-bottom: 2px solid var(--primary);
       padding: 12px 16px;
       display: flex;
       justify-content: space-between;
@@ -52,6 +88,7 @@
       position: sticky;
       top: 0;
       z-index: 10;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.12);
     }
 
     #clock {
@@ -59,70 +96,157 @@
     }
 
     .btn {
-      background-color: var(--primary);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: #fff;
       border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
+      padding: 9px 16px;
+      border-radius: 20px;
       cursor: pointer;
       font-weight: bold;
       font-size: 14px;
+      transition: transform 0.25s, box-shadow 0.25s;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
     }
 
     .btn:hover {
-      opacity: 0.9;
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 6px 15px rgba(220, 38, 38, 0.3);
     }
 
-    /* Nội dung chính */
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Hiệu ứng xuất hiện mượt cho các khối */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .container {
-      max-width: 900px;
-      margin: 20px auto;
+      max-width: 920px;
+      margin: 22px auto;
       padding: 0 15px;
     }
 
     .box {
       background-color: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 20px;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 22px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+      animation: fadeUp 0.7s ease both;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .box:nth-child(2) { animation-delay: 0.15s; }
+    .box:nth-child(3) { animation-delay: 0.3s; }
+    .box:nth-child(4) { animation-delay: 0.45s; }
+
+    .box:hover {
+      border-color: var(--primary);
+      transform: translateY(-3px);
+    }
+
+    /* Tiêu đề Noel */
+    .noel-badge {
+      display: inline-block;
+      background-color: var(--secondary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: bold;
+      padding: 4px 12px;
+      border-radius: 99px;
+      margin-bottom: 10px;
+      animation: swing 2.5s infinite ease-in-out;
+    }
+
+    @keyframes swing {
+      0%, 100% { transform: rotate(-2deg); }
+      50% { transform: rotate(2deg); }
     }
 
     h1 {
       color: var(--primary);
       text-align: center;
       margin-bottom: 12px;
-      font-size: 24px;
+      font-size: 25px;
     }
 
     h2 {
       color: var(--primary);
       margin-bottom: 14px;
       font-size: 20px;
+      border-left: 4px solid var(--secondary);
+      padding-left: 10px;
+    }
+
+    h3.sub-title {
+      color: var(--secondary);
+      margin: 16px 0 8px;
+      font-size: 17px;
     }
 
     .info-list {
       margin-left: 20px;
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
-    /* Lưới 2 ảnh trên máy tính */
+    .info-list li {
+      margin-bottom: 7px;
+    }
+
+    /* Mốc thời gian lịch sử */
+    .timeline {
+      border-left: 3px dashed var(--primary);
+      margin-left: 10px;
+      padding-left: 18px;
+    }
+
+    .timeline-item {
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .timeline-item::before {
+      content: "🎄";
+      position: absolute;
+      left: -29px;
+      top: 0;
+      font-size: 15px;
+    }
+
+    /* Lưới 2 ảnh */
     .gallery {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
+      gap: 16px;
     }
 
     .image-card {
       text-align: center;
+      overflow: hidden;
+      border-radius: 10px;
     }
 
     .image-card img {
       width: 100%;
       height: 250px;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: 10px;
       display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .image-card:hover img {
+      transform: scale(1.04);
     }
 
     .caption {
@@ -135,10 +259,11 @@
     /* Khung video YouTube phát tại chỗ */
     .video-box {
       position: relative;
-      padding-bottom: 56.25%; /* Tỉ lệ 16:9 */
+      padding-bottom: 56.25%;
       height: 0;
       overflow: hidden;
-      border-radius: 8px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
     }
 
     .video-box iframe {
@@ -150,10 +275,10 @@
       border: none;
     }
 
-    /* Chân trang & Hộp thoại thành viên */
+    /* Chân trang & Modal thành viên */
     footer {
       text-align: center;
-      padding: 10px 15px 30px;
+      padding: 10px 15px 35px;
     }
 
     .modal {
@@ -163,22 +288,28 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.65);
       justify-content: center;
       align-items: center;
-      z-index: 20;
+      z-index: 30;
       padding: 15px;
     }
 
     .modal-content {
       background-color: var(--card);
       color: var(--text);
-      padding: 22px;
-      border-radius: 10px;
+      padding: 24px;
+      border-radius: 16px;
       width: 100%;
-      max-width: 340px;
+      max-width: 350px;
       text-align: left;
-      border: 1px solid var(--border);
+      border: 2px solid var(--primary);
+      animation: popIn 0.3s ease;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
 
     .modal-content h3 {
@@ -193,15 +324,25 @@
     }
 
     .modal-content li {
-      padding: 8px 0;
+      padding: 8px 4px;
       border-bottom: 1px dashed var(--border);
+    }
+
+    .crown {
+      display: inline-block;
+      animation: bounceCrown 1.5s infinite;
+    }
+
+    @keyframes bounceCrown {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
     }
 
     /* Hiệu ứng tuyết rơi */
     .snowflake {
       position: fixed;
-      top: -20px;
-      color: #93c5fd;
+      top: -25px;
+      color: var(--snow-color);
       user-select: none;
       pointer-events: none;
       z-index: 999;
@@ -209,32 +350,23 @@
     }
 
     @keyframes fall {
-      to {
-        transform: translateY(105vh);
-      }
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(105vh) rotate(360deg); }
     }
 
-    /* Tối ưu riêng cho điện thoại (màn hình nhỏ hơn 600px) */
+    /* Tối ưu trên điện thoại */
     @media (max-width: 600px) {
       .top-bar {
         justify-content: center;
         text-align: center;
       }
 
-      h1 {
-        font-size: 20px;
-      }
-
-      h2 {
-        font-size: 18px;
-      }
-
-      .box {
-        padding: 15px;
-      }
+      h1 { font-size: 20px; }
+      h2 { font-size: 18px; }
+      .box { padding: 15px; }
 
       .gallery {
-        grid-template-columns: 1fr; /* Xếp dọc 1 cột cho ảnh to rõ */
+        grid-template-columns: 1fr;
       }
 
       .image-card img {
@@ -245,28 +377,75 @@
 </head>
 <body>
 
+  <!-- Dải đèn nháy Noel -->
+  <div class="noel-lights" id="noelLights"></div>
+
   <!-- Thanh thời gian thực & Nút Sáng/Tối -->
   <div class="top-bar">
     <div id="clock">Đang tải thời gian...</div>
-    <button class="btn" id="themeBtn" onclick="doiGiaoDien()">🌙 Chế độ tối</button>
+    <button class="btn" id="themeBtn" onclick="doiGiaoDien()">🌙 Đêm Noel tối</button>
   </div>
 
   <!-- Nội dung chính -->
   <div class="container">
+
+    <!-- 1. Mô tả tổng quan -->
     <div class="box">
+      <div style="text-align: center;">
+        <span class="noel-badge">🎅 MERRY CHRISTMAS • DỰ ÁN TIN HỌC 12 🎄</span>
+      </div>
       <h1>🏙️ LANDMARK 81 - BIỂU TƯỢNG SÀI GÒN</h1>
       <p>
-        <b>Landmark 81</b> là tòa nhà chọc trời cao nhất Việt Nam và nằm trong top những tòa nhà cao nhất Đông Nam Á. 
-        Tọa lạc tại quận Bình Thạnh, TP. Hồ Chí Minh, công trình lấy cảm hứng từ hình ảnh lũy tre truyền thống vươn cao.
+        <b>Landmark 81</b> là tòa nhà chọc trời cao nhất Việt Nam và nằm trong top những tòa nhà cao nhất Đông Nam Á.
+        Tọa lạc bên bờ sông Sài Gòn thuộc khu đô thị Vinhomes Central Park (quận Bình Thạnh, TP. Hồ Chí Minh), công trình
+        là niềm tự hào của kiến trúc hiện đại Việt Nam, đặc biệt rực rỡ mỗi dịp lễ hội và Giáng sinh về.
       </p>
+
+      <h3 class="sub-title">✨ Thông số nổi bật</h3>
       <ul class="info-list">
-        <li><b>Chiều cao:</b> 461,2 mét</li>
-        <li><b>Số tầng:</b> 81 tầng nổi và 3 tầng hầm</li>
-        <li><b>Khánh thành:</b> Năm 2018</li>
+        <li><b>Chiều cao:</b> 461,2 mét (tính đến đỉnh tháp kiến trúc).</li>
+        <li><b>Quy mô:</b> 81 tầng nổi và 3 tầng hầm, tổng diện tích sàn khoảng 241.000 m².</li>
+        <li><b>Vị trí:</b> Số 720A Điện Biên Phủ, quận Bình Thạnh, TP. Hồ Chí Minh.</li>
       </ul>
     </div>
 
-    <!-- Khu vực Hình ảnh -->
+    <!-- 2. Cấu trúc & Kiến trúc -->
+    <div class="box">
+      <h2>🏗️ Cấu trúc & Kiến trúc độc đáo</h2>
+      <ul class="info-list">
+        <li><b>Cảm hứng bó tre truyền thống:</b> Tòa tháp được tạo thành từ 25 khối ống vuông cao thấp khác nhau chụm lại, mô phỏng hình ảnh lũy tre làng Việt Nam vươn thẳng lên bầu trời – biểu tượng của sự đoàn kết và sức sống bền bỉ.</li>
+        <li><b>Hệ thống mặt kính Low-E:</b> Toàn bộ mặt ngoài phủ kính hiện đại giúp cách nhiệt, cản tia UV, tiết kiệm năng lượng và phản chiếu ánh sáng rực rỡ cả ban ngày lẫn ban đêm.</li>
+        <li><b>Phân khu chức năng bên trong:</b>
+          <ul class="info-list">
+            <li><i>Tầng B1 – 5:</i> Trung tâm thương mại Vincom Center với rạp chiếu phim, sân trượt băng trong nhà và khu ẩm thực.</li>
+            <li><i>Tầng 6 – 40:</i> Khu căn hộ cao cấp và căn hộ dịch vụ.</li>
+            <li><i>Tầng 42 – 76:</i> Khách sạn 5 sao sang trọng.</li>
+            <li><i>Tầng 79 – 81:</i> Đài quan sát <b>Landmark 81 SkyView</b> cho phép ngắm toàn cảnh Sài Gòn 360 độ từ độ cao gần 400 m.</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 3. Lịch sử hình thành & phát triển -->
+    <div class="box">
+      <h2>📜 Lịch sử hình thành & các cột mốc chính</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <b>Năm 2014 (Khởi công):</b> Dự án chính thức được khởi công xây dựng bên bờ sông Sài Gòn bởi tập đoàn Vingroup cùng các đơn vị thiết kế và thi công quốc tế.
+        </div>
+        <div class="timeline-item">
+          <b>Tháng 4/2018 (Cất nóc):</b> Hoàn thiện phần kết cấu chính và lắp đặt đỉnh tháp, chính thức vượt qua kỷ lục chiều cao trước đó tại Việt Nam.
+        </div>
+        <div class="timeline-item">
+          <b>Ngày 26/07/2018 (Khánh thành):</b> Mở cửa khu trung tâm thương mại đầu tiên nhân dịp kỷ niệm thành lập tập đoàn, thu hút hàng vạn người dân đến tham quan.
+        </div>
+        <div class="timeline-item">
+          <b>Tháng 4/2019 (Mở cửa SkyView):</b> Khánh thành đài quan sát trên những tầng cao nhất, hoàn thiện toàn bộ trải nghiệm tham quan trên không.
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Khu vực Hình ảnh -->
     <div class="box">
       <h2>📸 Hình ảnh nổi bật</h2>
       <div class="gallery">
@@ -282,7 +461,7 @@
       </div>
     </div>
 
-    <!-- Khu vực Video phát trực tiếp -->
+    <!-- 5. Khu vực Video phát trực tiếp -->
     <div class="box">
       <h2>🎬 Video toàn cảnh Landmark 81</h2>
       <div class="video-box">
@@ -293,15 +472,15 @@
 
   <!-- Nút Thành viên nhóm ở dưới cùng -->
   <footer>
-    <button class="btn" onclick="moDanhSach()">👥 Thành viên nhóm</button>
+    <button class="btn" onclick="moDanhSach()">🎁 Thành viên nhóm</button>
   </footer>
 
   <!-- Hộp thoại danh sách thành viên -->
   <div class="modal" id="groupModal" onclick="dongDanhSach(event)">
     <div class="modal-content">
-      <h3>THÀNH VIÊN NHÓM</h3>
+      <h3>🎄 THÀNH VIÊN NHÓM 🎄</h3>
       <ul>
-        <li>1. 👑 <b>Hà Văn Thành</b></li>
+        <li>1. <span class="crown">👑</span> <b>Hà Văn Thành</b></li>
         <li>2. Tạ Nữ Yến Nhi</li>
         <li>3. Nguyễn Thị Hoài Linh</li>
         <li>4. Nguyễn Hoài Băng</li>
@@ -311,7 +490,15 @@
   </div>
 
   <script>
-    // 1. Đồng hồ thời gian thực & lời chào
+    // 1. Tạo dải đèn nháy Noel trên cùng
+    const lightsContainer = document.getElementById("noelLights");
+    for (let i = 0; i < 24; i++) {
+      const bulb = document.createElement("span");
+      bulb.className = "bulb";
+      lightsContainer.appendChild(bulb);
+    }
+
+    // 2. Đồng hồ thời gian thực & lời chào
     function capNhatThoiGian() {
       const now = new Date();
       const gio = now.getHours();
@@ -333,18 +520,18 @@
     setInterval(capNhatThoiGian, 1000);
     capNhatThoiGian();
 
-    // 2. Chuyển chế độ Sáng / Tối
+    // 3. Chuyển chế độ Sáng / Tối chủ đề Noel
     function doiGiaoDien() {
       document.body.classList.toggle("dark");
       const btn = document.getElementById("themeBtn");
       if (document.body.classList.contains("dark")) {
-        btn.innerText = "☀️ Chế độ sáng";
+        btn.innerText = "❄️ Ngày Noel sáng";
       } else {
-        btn.innerText = "🌙 Chế độ tối";
+        btn.innerText = "🌙 Đêm Noel tối";
       }
     }
 
-    // 3. Mở / Đóng danh sách thành viên
+    // 4. Mở / Đóng danh sách thành viên
     function moDanhSach() {
       document.getElementById("groupModal").style.display = "flex";
     }
@@ -354,13 +541,15 @@
       }
     }
 
-    // 4. Hiệu ứng tuyết rơi đơn giản
+    // 5. Hiệu ứng tuyết rơi xoay nhẹ
+    const snowIcons = ["❄", "❅", "❆"];
     function taoTuyet() {
       const tuyet = document.createElement("div");
       tuyet.className = "snowflake";
-      tuyet.innerText = "❄";
+      tuyet.innerText = snowIcons[Math.floor(Math.random() * snowIcons.length)];
       tuyet.style.left = Math.random() * 100 + "vw";
       tuyet.style.fontSize = (Math.random() * 12 + 10) + "px";
+      tuyet.style.opacity = Math.random() * 0.6 + 0.4;
       tuyet.style.animationDuration = (Math.random() * 4 + 4) + "s";
       document.body.appendChild(tuyet);
 
@@ -368,7 +557,7 @@
         tuyet.remove();
       }, 8000);
     }
-    setInterval(taoTuyet, 400);
+    setInterval(taoTuyet, 320);
   </script>
 
 </body>
