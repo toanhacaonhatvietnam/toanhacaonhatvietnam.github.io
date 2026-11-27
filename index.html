@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Landmark 81</title>
   <style>
-    /* Bảng màu chủ đề Giáng Sinh - Chế độ Sáng (Tuyết & Đỏ Noel) */
+    /* Bảng màu chủ đề Giáng Sinh - Chế độ Sáng */
     :root {
       --bg: #fff5f5;
       --bg-gradient: linear-gradient(180deg, #ffe4e6 0%, #f0fdf4 100%);
@@ -13,13 +13,12 @@
       --text: #1e293b;
       --primary: #dc2626;      /* Đỏ Giáng Sinh */
       --secondary: #15803d;    /* Xanh lá thông */
-      --gold: #d97706;         /* Vàng chuông Noel */
       --border: #fecaca;
       --subtext: #64748b;
       --snow-color: #93c5fd;
     }
 
-    /* Bảng màu chủ đề Giáng Sinh - Chế độ Tối (Đêm Đông Lung Linh) */
+    /* Bảng màu chủ đề Giáng Sinh - Chế độ Tối */
     body.dark {
       --bg: #09131f;
       --bg-gradient: linear-gradient(180deg, #09131f 0%, #132a1c 100%);
@@ -27,7 +26,6 @@
       --text: #f8fafc;
       --primary: #f87171;
       --secondary: #4ade80;
-      --gold: #fbbf24;
       --border: #274436;
       --subtext: #cbd5e1;
       --snow-color: #ffffff;
@@ -155,14 +153,14 @@
       transform: translateY(-3px);
     }
 
-    /* Tiêu đề Noel */
+    /* Nhãn Noel */
     .noel-badge {
       display: inline-block;
       background-color: var(--secondary);
       color: #fff;
       font-size: 13px;
       font-weight: bold;
-      padding: 4px 12px;
+      padding: 4px 14px;
       border-radius: 99px;
       margin-bottom: 10px;
       animation: swing 2.5s infinite ease-in-out;
@@ -383,7 +381,7 @@
   <!-- Thanh thời gian thực & Nút Sáng/Tối -->
   <div class="top-bar">
     <div id="clock">Đang tải thời gian...</div>
-    <button class="btn" id="themeBtn" onclick="doiGiaoDien()">🌙 Đêm Noel tối</button>
+    <button class="btn" id="themeBtn" onclick="doiGiaoDien()">🌙 Chế độ tối</button>
   </div>
 
   <!-- Nội dung chính -->
@@ -392,7 +390,7 @@
     <!-- 1. Mô tả tổng quan -->
     <div class="box">
       <div style="text-align: center;">
-        <span class="noel-badge">🎅 MERRY CHRISTMAS • DỰ ÁN TIN HỌC 12 🎄</span>
+        <span class="noel-badge">🎅 MERRY CHRISTMAS 🎄</span>
       </div>
       <h1>🏙️ LANDMARK 81 - BIỂU TƯỢNG SÀI GÒN</h1>
       <p>
@@ -520,14 +518,14 @@
     setInterval(capNhatThoiGian, 1000);
     capNhatThoiGian();
 
-    // 3. Chuyển chế độ Sáng / Tối chủ đề Noel
+    // 3. Chuyển chế độ Sáng / Tối
     function doiGiaoDien() {
       document.body.classList.toggle("dark");
       const btn = document.getElementById("themeBtn");
       if (document.body.classList.contains("dark")) {
-        btn.innerText = "❄️ Ngày Noel sáng";
+        btn.innerText = "☀️ Chế độ sáng";
       } else {
-        btn.innerText = "🌙 Đêm Noel tối";
+        btn.innerText = "🌙 Chế độ tối";
       }
     }
 
