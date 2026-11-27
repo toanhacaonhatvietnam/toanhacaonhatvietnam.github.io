@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Landmark 81</title>
+  <title>Landmark 81 </title>
   <style>
     /* Bảng màu chủ đề Giáng Sinh - Chế độ Sáng */
     :root {
@@ -254,23 +254,26 @@
       color: var(--subtext);
     }
 
-    /* Khung video YouTube phát tại chỗ */
+    /* Khung video MP4 tự phát khi lướt tới */
     .video-box {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
       border-radius: 10px;
+      overflow: hidden;
       border: 2px solid var(--border);
+      background: #000;
     }
 
-    .video-box iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
+    .video-box video {
       width: 100%;
-      height: 100%;
-      border: none;
+      max-height: 480px;
+      display: block;
+    }
+
+    .video-note {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--subtext);
+      text-align: center;
+      font-style: italic;
     }
 
     /* Chân trang & Modal thành viên */
@@ -459,12 +462,13 @@
       </div>
     </div>
 
-    <!-- 5. Khu vực Video phát trực tiếp -->
+    <!-- 5. Khu vực Video tự động phát khi lướt tới -->
     <div class="box">
       <h2>🎬 Video toàn cảnh Landmark 81</h2>
       <div class="video-box">
-        <iframe src="https://www.youtube.com/embed/jiE-lopB0Js" title="Vincom Landmark 81" allowfullscreen></iframe>
+        <video id="landmarkVideo" src="https://files.catbox.moe/8hr177.mp4" controls muted loop playsinline preload="metadata"></video>
       </div>
+      <p class="video-note">Video tự động phát khi lướt tới • Bấm vào biểu tượng loa trên khung phát để bật tiếng.</p>
     </div>
   </div>
 
@@ -539,7 +543,21 @@
       }
     }
 
-    // 5. Hiệu ứng tuyết rơi xoay nhẹ
+    // 5. Tự động phát video khi lướt tới khung nhìn
+    const video = document.getElementById("landmarkVideo");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.5 });
+
+    observer.observe(video);
+
+    // 6. Hiệu ứng tuyết rơi xoay nhẹ
     const snowIcons = ["❄", "❅", "❆"];
     function taoTuyet() {
       const tuyet = document.createElement("div");
