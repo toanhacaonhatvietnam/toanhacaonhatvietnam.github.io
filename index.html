@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Landmark 81 - Kiến Trúc Tòa Tháp</title>
+  <title>Landmark 81 - Kiến Trúc Tòa Tháp </title>
   <style>
     /* ================= HỆ THỐNG BIẾN MÀU ULTRA & CHỦ ĐỀ NOEL ================= */
     :root {
@@ -26,6 +26,7 @@
       --glow: rgba(220, 38, 38, 0.32);
       --tower-glass: linear-gradient(180deg, #38bdf8 0%, #0284c7 55%, #1e3a8a 100%);
       --grid-line: rgba(15, 23, 42, 0.04);
+      --snow-color: #60a5fa;
     }
 
     body.dark {
@@ -48,6 +49,7 @@
       --glow: rgba(248, 113, 113, 0.42);
       --tower-glass: linear-gradient(180deg, #bae6fd 0%, #0ea5e9 45%, #1e1b4b 100%);
       --grid-line: rgba(255, 255, 255, 0.035);
+      --snow-color: #ffffff;
     }
 
     /* Các bộ màu đèn tháp tùy biến sâu */
@@ -181,14 +183,21 @@
       opacity: 1;
     }
 
-    /* Canvas tuyết rơi mượt 60fps bằng GPU */
-    #snowCanvas {
+    /* ================= TUYẾT RƠI BÔNG TUYẾT NHƯ CŨ ================= */
+    .snowflake {
       position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
+      top: -25px;
+      color: var(--snow-color);
+      user-select: none;
       pointer-events: none;
       z-index: 40;
+      animation: snowFall linear forwards;
+    }
+
+    @keyframes snowFall {
+      0% { transform: translateY(0) translateX(0) rotate(0deg); }
+      50% { transform: translateY(50vh) translateX(16px) rotate(180deg); }
+      100% { transform: translateY(105vh) translateX(-10px) rotate(360deg); }
     }
 
     /* ================= DẢI ĐÈN NHÁY NOEL TRÊN CÙNG ================= */
@@ -890,13 +899,15 @@
       }
 
       .tower-spine {
-        padding-left: 16px;
+        padding-left: 12px;
       }
 
       .floor-tag {
         position: static;
         display: inline-block;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
+        font-size: 10.5px;
+        padding: 4px 10px;
       }
 
       .zone-grid, .gallery-grid {
@@ -914,9 +925,6 @@
   <!-- Khối cầu ánh sáng khúc xạ nền -->
   <div class="ambient-orb orb-1"></div>
   <div class="ambient-orb orb-2"></div>
-
-  <!-- Canvas tuyết rơi mượt 60fps -->
-  <canvas id="snowCanvas"></canvas>
 
   <!-- Dải đèn nháy Noel -->
   <div class="noel-wire" id="noelWire"></div>
@@ -1154,56 +1162,26 @@
       }, { passive: true });
     });
 
-    // 5. Tuyết rơi Canvas siêu mượt 60fps
-    const canvas = document.getElementById("snowCanvas");
-    const ctx = canvas.getContext("2d");
+    // 5. Hiệu ứng tuyết rơi bông tuyết xoay nhẹ như cũ
     let snowEnabled = true;
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
-
-    window.addEventListener("resize", () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    });
-
-    const flakes = Array.from({ length: 65 }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      r: Math.random() * 3 + 1.5,
-      d: Math.random() * 1.2 + 0.5,
-      sway: Math.random() * Math.PI * 2
-    }));
-
+    const snowChars = ["❄", "❅", "❆"];
     function toggleSnow() {
       snowEnabled = !snowEnabled;
       document.getElementById("snowToggleBtn").innerText = snowEnabled ? "❄️ Tuyết: Bật" : "❄️ Tuyết: Tắt";
-      if (!snowEnabled) ctx.clearRect(0, 0, width, height);
     }
 
-    function renderSnow() {
-      if (snowEnabled) {
-        ctx.clearRect(0, 0, width, height);
-        const isDark = document.body.classList.contains("dark");
-        ctx.fillStyle = isDark ? "rgba(255, 255, 255, 0.85)" : "rgba(125, 211, 252, 0.85)";
-        ctx.beginPath();
-        for (const f of flakes) {
-          f.sway += 0.015;
-          f.y += f.d;
-          f.x += Math.sin(f.sway) * 0.6;
-          if (f.y > height) {
-            f.y = -10;
-            f.x = Math.random() * width;
-          }
-          if (f.x > width) f.x = 0;
-          if (f.x < 0) f.x = width;
-          ctx.moveTo(f.x, f.y);
-          ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-        }
-        ctx.fill();
-      }
-      requestAnimationFrame(renderSnow);
-    }
-    requestAnimationFrame(renderSnow);
+    setInterval(() => {
+      if (!snowEnabled) return;
+      const tuyet = document.createElement("div");
+      tuyet.className = "snowflake";
+      tuyet.innerText = snowChars[Math.floor(Math.random() * snowChars.length)];
+      tuyet.style.left = Math.random() * 100 + "vw";
+      tuyet.style.fontSize = (Math.random() * 12 + 10) + "px";
+      tuyet.style.opacity = Math.random() * 0.65 + 0.35;
+      tuyet.style.animationDuration = (Math.random() * 4 + 4.5) + "s";
+      document.body.appendChild(tuyet);
+      setTimeout(() => tuyet.remove(), 8500);
+    }, 320);
 
     // 6. Hiệu ứng xuất hiện từng tầng & Thang máy cuộn mượt
     const sections = document.querySelectorAll(".floor-section");
