@@ -3,374 +3,742 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Landmark 81 </title>
+  <title>Landmark 81 - Kiến Trúc Tòa Tháp & Giáng Sinh</title>
   <style>
-    /* Bảng màu chủ đề Giáng Sinh - Chế độ Sáng */
+    /* ================= BIẾN CHỦ ĐỀ & TÙY BIẾN SÂU ================= */
     :root {
-      --bg: #fff5f5;
-      --bg-gradient: linear-gradient(180deg, #ffe4e6 0%, #f0fdf4 100%);
-      --card: #ffffff;
-      --text: #1e293b;
-      --primary: #dc2626;      /* Đỏ Giáng Sinh */
-      --secondary: #15803d;    /* Xanh lá thông */
-      --border: #fecaca;
-      --subtext: #64748b;
-      --snow-color: #93c5fd;
+      --bg-main: #fdf2f2;
+      --bg-mesh: radial-gradient(circle at 15% 15%, rgba(220, 38, 38, 0.14), transparent 40%),
+                 radial-gradient(circle at 85% 30%, rgba(21, 128, 61, 0.14), transparent 45%),
+                 linear-gradient(180deg, #fff1f2 0%, #f0fdf4 50%, #fefce8 100%);
+      --glass: rgba(255, 255, 255, 0.82);
+      --glass-border: rgba(220, 38, 38, 0.28);
+      --text: #0f172a;
+      --subtext: #475569;
+      --accent: #dc2626;       /* Mặc định: Đỏ Noel */
+      --accent-2: #15803d;     /* Xanh lá thông */
+      --glow: rgba(220, 38, 38, 0.35);
+      --tower-glass: linear-gradient(180deg, #38bdf8 0%, #0284c7 60%, #1e3a8a 100%);
+      --snow: #93c5fd;
     }
 
-    /* Bảng màu chủ đề Giáng Sinh - Chế độ Tối */
     body.dark {
-      --bg: #09131f;
-      --bg-gradient: linear-gradient(180deg, #09131f 0%, #132a1c 100%);
-      --card: #111e2e;
+      --bg-main: #060d18;
+      --bg-mesh: radial-gradient(circle at 20% 10%, rgba(248, 113, 113, 0.16), transparent 40%),
+                 radial-gradient(circle at 80% 40%, rgba(74, 222, 128, 0.12), transparent 45%),
+                 linear-gradient(180deg, #050b14 0%, #0b192c 55%, #091d16 100%);
+      --glass: rgba(15, 23, 42, 0.78);
+      --glass-border: rgba(248, 113, 113, 0.32);
       --text: #f8fafc;
-      --primary: #f87171;
-      --secondary: #4ade80;
-      --border: #274436;
       --subtext: #cbd5e1;
-      --snow-color: #ffffff;
+      --accent: #f87171;
+      --accent-2: #4ade80;
+      --glow: rgba(248, 113, 113, 0.45);
+      --tower-glass: linear-gradient(180deg, #7dd3fc 0%, #0ea5e9 45%, #1e1b4b 100%);
+      --snow: #ffffff;
+    }
+
+    /* Sắc thái đèn tháp tùy biến */
+    body.theme-green {
+      --accent: #16a34a;
+      --accent-2: #dc2626;
+      --glow: rgba(22, 163, 74, 0.4);
+    }
+    body.dark.theme-green {
+      --accent: #4ade80;
+      --accent-2: #f87171;
+      --glow: rgba(74, 222, 128, 0.45);
+    }
+
+    body.theme-gold {
+      --accent: #d97706;
+      --accent-2: #dc2626;
+      --glow: rgba(217, 119, 6, 0.42);
+    }
+    body.dark.theme-gold {
+      --accent: #fbbf24;
+      --accent-2: #f87171;
+      --glow: rgba(251, 191, 36, 0.48);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Arial, sans-serif;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
-      background: var(--bg-gradient);
-      background-color: var(--bg);
+      background-color: var(--bg-main);
+      background-image: var(--bg-mesh);
       color: var(--text);
-      transition: background 0.4s, color 0.4s;
       line-height: 1.65;
-      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.45s ease, color 0.45s ease;
     }
 
-    /* Dải đèn nháy Noel trang trí trên cùng */
-    .noel-lights {
+    /* ================= DẢI ĐÈN NHÁY NOEL TRÊN ĐỈNH ================= */
+    .noel-wire {
       display: flex;
       justify-content: space-around;
-      padding: 4px 0;
-      background: var(--card);
-      border-bottom: 1px dashed var(--border);
-      overflow: hidden;
+      padding: 5px 0;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px dashed var(--glass-border);
+      position: relative;
+      z-index: 30;
     }
 
     .bulb {
-      width: 10px;
-      height: 14px;
+      width: 9px;
+      height: 13px;
       border-radius: 50%;
-      animation: blink 1.4s infinite alternate;
+      animation: twinkle 1.3s infinite alternate;
+    }
+    .bulb:nth-child(3n+1) { background: #ef4444; box-shadow: 0 0 10px #ef4444; }
+    .bulb:nth-child(3n+2) { background: #22c55e; box-shadow: 0 0 10px #22c55e; animation-delay: 0.4s; }
+    .bulb:nth-child(3n+3) { background: #facc15; box-shadow: 0 0 10px #facc15; animation-delay: 0.8s; }
+
+    @keyframes twinkle {
+      0% { opacity: 0.3; transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1.2); }
     }
 
-    .bulb:nth-child(3n+1) { background: #ef4444; box-shadow: 0 0 8px #ef4444; animation-delay: 0s; }
-    .bulb:nth-child(3n+2) { background: #22c55e; box-shadow: 0 0 8px #22c55e; animation-delay: 0.4s; }
-    .bulb:nth-child(3n+3) { background: #facc15; box-shadow: 0 0 8px #facc15; animation-delay: 0.8s; }
-
-    @keyframes blink {
-      0% { opacity: 0.35; transform: scale(0.9); }
-      100% { opacity: 1; transform: scale(1.15); }
-    }
-
-    /* Thanh thời gian thực & nút Sáng/Tối */
-    .top-bar {
-      background-color: var(--card);
-      border-bottom: 2px solid var(--primary);
-      padding: 12px 16px;
+    /* ================= THANH ĐIỀU KHIỂN TRÊN CÙNG ================= */
+    .hud-header {
+      position: sticky;
+      top: 0;
+      z-index: 25;
+      background: var(--glass);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 10px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.12);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     }
 
-    #clock {
-      font-size: 15px;
-    }
-
-    .btn {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: #fff;
-      border: none;
-      padding: 9px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
+    .clock-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       font-size: 14px;
-      transition: transform 0.25s, box-shadow 0.25s;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+      font-weight: 600;
     }
 
-    .btn:hover {
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 6px 15px rgba(220, 38, 38, 0.3);
-    }
-
-    .btn:active {
-      transform: scale(0.97);
-    }
-
-    /* Hiệu ứng xuất hiện mượt cho các khối */
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(22px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .container {
-      max-width: 920px;
-      margin: 22px auto;
-      padding: 0 15px;
-    }
-
-    .box {
-      background-color: var(--card);
-      border: 2px solid var(--border);
-      border-radius: 14px;
-      padding: 22px;
-      margin-bottom: 22px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-      animation: fadeUp 0.7s ease both;
-      transition: transform 0.3s, border-color 0.3s;
-    }
-
-    .box:nth-child(2) { animation-delay: 0.15s; }
-    .box:nth-child(3) { animation-delay: 0.3s; }
-    .box:nth-child(4) { animation-delay: 0.45s; }
-
-    .box:hover {
-      border-color: var(--primary);
-      transform: translateY(-3px);
-    }
-
-    /* Nhãn Noel */
-    .noel-badge {
-      display: inline-block;
-      background-color: var(--secondary);
+    .altitude-readout {
+      background: var(--accent);
       color: #fff;
-      font-size: 13px;
-      font-weight: bold;
-      padding: 4px 14px;
+      padding: 3px 10px;
       border-radius: 99px;
-      margin-bottom: 10px;
-      animation: swing 2.5s infinite ease-in-out;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      box-shadow: 0 0 12px var(--glow);
     }
 
-    @keyframes swing {
-      0%, 100% { transform: rotate(-2deg); }
-      50% { transform: rotate(2deg); }
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
-    h1 {
-      color: var(--primary);
-      text-align: center;
-      margin-bottom: 12px;
-      font-size: 25px;
+    .btn-pill {
+      background: var(--glass);
+      color: var(--text);
+      border: 1px solid var(--glass-border);
+      padding: 7px 13px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
     }
 
-    h2 {
-      color: var(--primary);
-      margin-bottom: 14px;
-      font-size: 20px;
-      border-left: 4px solid var(--secondary);
-      padding-left: 10px;
+    .btn-pill:hover {
+      background: var(--accent);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px var(--glow);
     }
 
-    h3.sub-title {
-      color: var(--secondary);
-      margin: 16px 0 8px;
-      font-size: 17px;
+    .color-dots {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 99px;
     }
 
-    .info-list {
-      margin-left: 20px;
-      margin-top: 8px;
+    .dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      cursor: pointer;
+      transition: transform 0.2s;
+      box-shadow: 0 0 4px rgba(0,0,0,0.3);
+    }
+    .dot:hover { transform: scale(1.25); }
+    .dot-red { background: #dc2626; }
+    .dot-green { background: #16a34a; }
+    .dot-gold { background: #d97706; }
+
+    /* ================= TRỤC THANG MÁY BÊN PHẢI (ELEVATOR NAV) ================= */
+    .elevator-shaft {
+      position: fixed;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      padding: 14px 8px;
+      border-radius: 99px;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     }
 
-    .info-list li {
-      margin-bottom: 7px;
+    .shaft-track {
+      position: absolute;
+      top: 18px;
+      bottom: 18px;
+      width: 3px;
+      background: var(--glass-border);
+      z-index: -1;
     }
 
-    /* Mốc thời gian lịch sử */
-    .timeline {
-      border-left: 3px dashed var(--primary);
-      margin-left: 10px;
-      padding-left: 18px;
+    .shaft-progress {
+      width: 100%;
+      height: 0%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      transition: height 0.15s linear;
     }
 
-    .timeline-item {
-      margin-bottom: 12px;
+    .floor-node {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--bg-main);
+      border: 2px solid var(--glass-border);
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
       position: relative;
     }
 
-    .timeline-item::before {
-      content: "🎄";
-      position: absolute;
-      left: -29px;
-      top: 0;
-      font-size: 15px;
+    .floor-node:hover, .floor-node.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: #fff;
+      transform: scale(1.18);
+      box-shadow: 0 0 14px var(--glow);
     }
 
-    /* Lưới 2 ảnh */
-    .gallery {
+    /* ================= KHUNG HERO MÔ HÌNH THÁP 3D BÓ TRE ================= */
+    .hero-tower {
+      max-width: 1020px;
+      margin: 28px auto 20px;
+      padding: 28px 22px;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-
-    .image-card {
-      text-align: center;
+      grid-template-columns: 1.2fr 0.8fr;
+      align-items: center;
+      gap: 24px;
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+      position: relative;
       overflow: hidden;
-      border-radius: 10px;
     }
 
-    .image-card img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 10px;
+    .hero-badge {
+      display: inline-block;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 5px 14px;
+      border-radius: 99px;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+      animation: floatBadge 3s ease-in-out infinite;
+    }
+
+    @keyframes floatBadge {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .hero-title {
+      font-size: 34px;
+      line-height: 1.2;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+
+    .hero-desc {
+      color: var(--subtext);
+      font-size: 15.5px;
+      margin-bottom: 18px;
+    }
+
+    .stat-chips {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .stat-chip {
+      background: var(--bg-main);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 10px 8px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .stat-chip:hover { transform: translateY(-4px); }
+    .stat-chip strong {
       display: block;
-      transition: transform 0.4s ease;
+      font-size: 18px;
+      color: var(--accent);
     }
-
-    .image-card:hover img {
-      transform: scale(1.04);
-    }
-
-    .caption {
-      margin-top: 8px;
-      font-size: 13px;
-      font-style: italic;
+    .stat-chip span {
+      font-size: 12px;
       color: var(--subtext);
     }
 
-    /* Khung video MP4 tự phát khi lướt tới */
-    .video-box {
-      border-radius: 10px;
-      overflow: hidden;
-      border: 2px solid var(--border);
-      background: #000;
+    /* Mô hình kiến trúc bó tre CSS động */
+    .tower-visual {
+      height: 290px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 4px;
+      padding-top: 25px;
+      position: relative;
+      perspective: 700px;
     }
 
-    .video-box video {
+    .spire-beam {
+      position: absolute;
+      top: 0;
+      width: 3px;
+      height: 45px;
+      background: var(--accent);
+      box-shadow: 0 0 16px var(--accent), 0 0 30px var(--accent);
+      animation: beaconPulse 1.5s infinite alternate;
+    }
+
+    @keyframes beaconPulse {
+      from { opacity: 0.4; transform: scaleY(0.9); }
+      to { opacity: 1; transform: scaleY(1.15); }
+    }
+
+    .bamboo-tube {
+      width: 14px;
+      background: var(--tower-glass);
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      border-radius: 3px 3px 0 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(14, 165, 233, 0.25);
+      animation: riseTube 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    /* Luồng sáng chạy dọc thân kính tòa nhà */
+    .bamboo-tube::after {
+      content: "";
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 60%;
+      background: linear-gradient(180deg, transparent, rgba(255,255,255,0.75), transparent);
+      animation: glassScan 3.2s infinite linear;
+    }
+
+    .t1 { height: 110px; animation-delay: 0.1s; }
+    .t2 { height: 155px; animation-delay: 0.2s; }
+    .t3 { height: 205px; animation-delay: 0.3s; }
+    .t4 { height: 250px; width: 18px; animation-delay: 0.4s; border-color: var(--accent); }
+    .t5 { height: 215px; animation-delay: 0.35s; }
+    .t6 { height: 165px; animation-delay: 0.25s; }
+    .t7 { height: 120px; animation-delay: 0.15s; }
+
+    @keyframes riseTube {
+      from { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+      to { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+    }
+
+    @keyframes glassScan {
+      0% { top: -80%; }
+      100% { top: 140%; }
+    }
+
+    /* ================= CẤU TRÚC CÁC TẦNG KIẾN TRÚC ================= */
+    .tower-container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 10px 55px 30px 18px; /* Chừa lề phải cho trục thang máy */
+      position: relative;
+    }
+
+    /* Trục cột sống tòa nhà nối các tầng */
+    .tower-spine {
+      position: relative;
+      padding-left: 28px;
+      border-left: 3px solid var(--glass-border);
+    }
+
+    .floor-section {
+      background: var(--glass);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 28px;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      opacity: 0;
+      transform: translateY(35px) scale(0.98);
+      transition: all 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .floor-section.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .floor-section:hover {
+      border-color: var(--accent);
+      box-shadow: 0 14px 36px var(--glow);
+    }
+
+    /* Nhãn tầng gắn trên trục dọc */
+    .floor-tag {
+      position: absolute;
+      left: -45px;
+      top: 22px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px var(--glow);
+      white-space: nowrap;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed var(--glass-border);
+    }
+
+    .section-header h2 {
+      font-size: 21px;
+      color: var(--accent);
+    }
+
+    .meter-badge {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-2);
+      background: var(--bg-main);
+      padding: 4px 10px;
+      border-radius: 99px;
+      border: 1px solid var(--glass-border);
+    }
+
+    /* Lưới phân khu kiến trúc */
+    .zone-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .zone-card {
+      background: var(--bg-main);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 14px;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .zone-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+    }
+
+    .zone-card h4 {
+      color: var(--accent);
+      margin-bottom: 5px;
+      font-size: 15px;
+    }
+
+    .zone-card p {
+      font-size: 14px;
+      color: var(--subtext);
+    }
+
+    /* Dòng thời gian lịch sử */
+    .history-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .history-step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      background: var(--bg-main);
+      padding: 13px 15px;
+      border-radius: 14px;
+      border-left: 4px solid var(--accent);
+    }
+
+    .year-pill {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 800;
+      font-size: 12.5px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+
+    /* ================= LƯỚI ẢNH 3D TILT ================= */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .tilt-card {
+      background: var(--bg-main);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      transform-style: preserve-3d;
+    }
+
+    .tilt-card:hover {
+      box-shadow: 0 16px 32px var(--glow);
+    }
+
+    .tilt-card img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .tilt-caption {
+      padding: 10px 12px;
+      font-size: 13px;
+      font-style: italic;
+      color: var(--subtext);
+      text-align: center;
+    }
+
+    /* ================= KHUNG VIDEO TỰ PHÁT ================= */
+    .video-frame {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid var(--glass-border);
+      background: #000;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+    }
+
+    .video-frame video {
       width: 100%;
       max-height: 480px;
       display: block;
     }
 
-    .video-note {
+    .video-hint {
       margin-top: 8px;
       font-size: 13px;
-      color: var(--subtext);
       text-align: center;
+      color: var(--subtext);
       font-style: italic;
     }
 
-    /* Chân trang & Modal thành viên */
+    /* ================= CHÂN TRANG & MODAL NHÓM ================= */
     footer {
       text-align: center;
-      padding: 10px 15px 35px;
+      padding: 10px 15px 45px;
     }
 
-    .modal {
+    .team-trigger {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      border: none;
+      padding: 12px 26px;
+      border-radius: 99px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 24px var(--glow);
+      transition: transform 0.25s ease;
+    }
+
+    .team-trigger:hover {
+      transform: scale(1.06);
+    }
+
+    .modal-backdrop {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.65);
+      inset: 0;
+      background: rgba(0, 0, 0, 0.68);
+      backdrop-filter: blur(6px);
+      z-index: 50;
       justify-content: center;
       align-items: center;
-      z-index: 30;
-      padding: 15px;
+      padding: 16px;
     }
 
-    .modal-content {
-      background-color: var(--card);
+    .modal-box {
+      background: var(--bg-main);
       color: var(--text);
-      padding: 24px;
-      border-radius: 16px;
+      border: 2px solid var(--accent);
+      border-radius: 22px;
+      padding: 26px;
       width: 100%;
-      max-width: 350px;
-      text-align: left;
-      border: 2px solid var(--primary);
-      animation: popIn 0.3s ease;
+      max-width: 370px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      animation: zoomModal 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    @keyframes popIn {
-      from { transform: scale(0.85); opacity: 0; }
+    @keyframes zoomModal {
+      from { transform: scale(0.8); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
 
-    .modal-content h3 {
+    .modal-box h3 {
       text-align: center;
-      color: var(--primary);
-      margin-bottom: 14px;
-    }
-
-    .modal-content ul {
-      list-style: none;
+      color: var(--accent);
       margin-bottom: 16px;
+      font-size: 20px;
     }
 
-    .modal-content li {
-      padding: 8px 4px;
-      border-bottom: 1px dashed var(--border);
+    .member-list {
+      list-style: none;
+      margin-bottom: 18px;
     }
 
-    .crown {
+    .member-list li {
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .crown-anim {
       display: inline-block;
-      animation: bounceCrown 1.5s infinite;
+      animation: crownFloat 1.4s infinite ease-in-out;
     }
 
-    @keyframes bounceCrown {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
+    @keyframes crownFloat {
+      0%, 100% { transform: translateY(0) rotate(-6deg); }
+      50% { transform: translateY(-4px) rotate(6deg); }
     }
 
-    /* Hiệu ứng tuyết rơi */
+    /* ================= TUYẾT RƠI ================= */
     .snowflake {
       position: fixed;
       top: -25px;
-      color: var(--snow-color);
+      color: var(--snow);
       user-select: none;
       pointer-events: none;
-      z-index: 999;
-      animation: fall linear forwards;
+      z-index: 40;
+      animation: snowFall linear forwards;
     }
 
-    @keyframes fall {
-      0% { transform: translateY(0) rotate(0deg); }
-      100% { transform: translateY(105vh) rotate(360deg); }
+    @keyframes snowFall {
+      0% { transform: translateY(0) translateX(0) rotate(0deg); }
+      50% { transform: translateY(50vh) translateX(18px) rotate(180deg); }
+      100% { transform: translateY(105vh) translateX(-12px) rotate(360deg); }
     }
 
-    /* Tối ưu trên điện thoại */
-    @media (max-width: 600px) {
-      .top-bar {
-        justify-content: center;
-        text-align: center;
+    /* ================= TỐI ƯU ĐIỆN THOẠI ================= */
+    @media (max-width: 768px) {
+      .hero-tower {
+        grid-template-columns: 1fr;
+        margin: 16px 12px;
+        padding: 20px 16px;
       }
 
-      h1 { font-size: 20px; }
-      h2 { font-size: 18px; }
-      .box { padding: 15px; }
+      .hero-title { font-size: 26px; }
+      .tower-visual { height: 210px; }
 
-      .gallery {
+      .elevator-shaft {
+        right: 6px;
+        padding: 10px 5px;
+        gap: 10px;
+      }
+
+      .floor-node {
+        width: 24px;
+        height: 24px;
+        font-size: 9px;
+      }
+
+      .tower-container {
+        padding: 10px 38px 25px 12px;
+      }
+
+      .tower-spine {
+        padding-left: 16px;
+      }
+
+      .floor-tag {
+        position: static;
+        display: inline-block;
+        margin-bottom: 8px;
+      }
+
+      .zone-grid, .gallery-grid {
         grid-template-columns: 1fr;
       }
 
-      .image-card img {
+      .tilt-card img {
         height: 210px;
       }
     }
@@ -379,202 +747,314 @@
 <body>
 
   <!-- Dải đèn nháy Noel -->
-  <div class="noel-lights" id="noelLights"></div>
+  <div class="noel-wire" id="noelWire"></div>
 
-  <!-- Thanh thời gian thực & Nút Sáng/Tối -->
-  <div class="top-bar">
-    <div id="clock">Đang tải thời gian...</div>
-    <button class="btn" id="themeBtn" onclick="doiGiaoDien()">🌙 Chế độ tối</button>
-  </div>
+  <!-- Thanh điều khiển & Đồng hồ thời gian thực -->
+  <header class="hud-header">
+    <div class="clock-pill">
+      <span id="clockText">Đang tải...</span>
+      <span class="altitude-readout" id="altitudeDisplay">Độ cao: 0m</span>
+    </div>
 
-  <!-- Nội dung chính -->
-  <div class="container">
-
-    <!-- 1. Mô tả tổng quan -->
-    <div class="box">
-      <div style="text-align: center;">
-        <span class="noel-badge">🎅 MERRY CHRISTMAS 🎄</span>
+    <div class="controls-group">
+      <div class="color-dots" title="Đổi màu ánh sáng tháp">
+        <span class="dot dot-red" onclick="setAccent('')" title="Đỏ Giáng Sinh"></span>
+        <span class="dot dot-green" onclick="setAccent('theme-green')" title="Xanh Thông Noel"></span>
+        <span class="dot dot-gold" onclick="setAccent('theme-gold')" title="Vàng Hoàng Kim"></span>
       </div>
-      <h1>🏙️ LANDMARK 81 - BIỂU TƯỢNG SÀI GÒN</h1>
-      <p>
-        <b>Landmark 81</b> là tòa nhà chọc trời cao nhất Việt Nam và nằm trong top những tòa nhà cao nhất Đông Nam Á.
-        Tọa lạc bên bờ sông Sài Gòn thuộc khu đô thị Vinhomes Central Park (quận Bình Thạnh, TP. Hồ Chí Minh), công trình
-        là niềm tự hào của kiến trúc hiện đại Việt Nam, đặc biệt rực rỡ mỗi dịp lễ hội và Giáng sinh về.
+      <button class="btn-pill" id="snowToggleBtn" onclick="toggleSnow()">❄️ Tuyết: Bật</button>
+      <button class="btn-pill" id="themeToggleBtn" onclick="toggleDark()">🌙 Chế độ tối</button>
+    </div>
+  </header>
+
+  <!-- Trục thang máy điều hướng các tầng -->
+  <nav class="elevator-shaft" aria-label="Thang máy chuyển tầng">
+    <div class="shaft-track"><div class="shaft-progress" id="shaftProgress"></div></div>
+    <a href="#tang-81" class="floor-node active" title="Tầng 81: Đỉnh tháp & Mô tả">T81</a>
+    <a href="#tang-42" class="floor-node" title="Tầng 42: Cấu trúc kiến trúc">T42</a>
+    <a href="#tang-18" class="floor-node" title="Tầng 18: Lịch sử xây dựng">T18</a>
+    <a href="#tang-05" class="floor-node" title="Tầng 05: Thư viện hình ảnh">T05</a>
+    <a href="#tang-b1" class="floor-node" title="Tầng B1: Video toàn cảnh">B1</a>
+  </nav>
+
+  <!-- Khu vực mở đầu: Mô hình tháp 3D bó tre -->
+  <section class="hero-tower" id="heroCard">
+    <div>
+      <span class="hero-badge">🎄 MERRY CHRISTMAS • KIẾN TRÚC BIỂU TƯỢNG</span>
+      <h1 class="hero-title">LANDMARK 81<br>ĐỈNH CAO SÀI GÒN</h1>
+      <p class="hero-desc">
+        Tòa tháp chọc trời cao nhất Việt Nam vươn mình bên bờ sông Sài Gòn với cảm hứng từ lũy tre truyền thống,
+        rực rỡ sắc màu lễ hội Giáng sinh giữa bầu trời thành phố.
       </p>
-
-      <h3 class="sub-title">✨ Thông số nổi bật</h3>
-      <ul class="info-list">
-        <li><b>Chiều cao:</b> 461,2 mét (tính đến đỉnh tháp kiến trúc).</li>
-        <li><b>Quy mô:</b> 81 tầng nổi và 3 tầng hầm, tổng diện tích sàn khoảng 241.000 m².</li>
-        <li><b>Vị trí:</b> Số 720A Điện Biên Phủ, quận Bình Thạnh, TP. Hồ Chí Minh.</li>
-      </ul>
-    </div>
-
-    <!-- 2. Cấu trúc & Kiến trúc -->
-    <div class="box">
-      <h2>🏗️ Cấu trúc & Kiến trúc độc đáo</h2>
-      <ul class="info-list">
-        <li><b>Cảm hứng bó tre truyền thống:</b> Tòa tháp được tạo thành từ 25 khối ống vuông cao thấp khác nhau chụm lại, mô phỏng hình ảnh lũy tre làng Việt Nam vươn thẳng lên bầu trời – biểu tượng của sự đoàn kết và sức sống bền bỉ.</li>
-        <li><b>Hệ thống mặt kính Low-E:</b> Toàn bộ mặt ngoài phủ kính hiện đại giúp cách nhiệt, cản tia UV, tiết kiệm năng lượng và phản chiếu ánh sáng rực rỡ cả ban ngày lẫn ban đêm.</li>
-        <li><b>Phân khu chức năng bên trong:</b>
-          <ul class="info-list">
-            <li><i>Tầng B1 – 5:</i> Trung tâm thương mại Vincom Center với rạp chiếu phim, sân trượt băng trong nhà và khu ẩm thực.</li>
-            <li><i>Tầng 6 – 40:</i> Khu căn hộ cao cấp và căn hộ dịch vụ.</li>
-            <li><i>Tầng 42 – 76:</i> Khách sạn 5 sao sang trọng.</li>
-            <li><i>Tầng 79 – 81:</i> Đài quan sát <b>Landmark 81 SkyView</b> cho phép ngắm toàn cảnh Sài Gòn 360 độ từ độ cao gần 400 m.</li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-
-    <!-- 3. Lịch sử hình thành & phát triển -->
-    <div class="box">
-      <h2>📜 Lịch sử hình thành & các cột mốc chính</h2>
-      <div class="timeline">
-        <div class="timeline-item">
-          <b>Năm 2014 (Khởi công):</b> Dự án chính thức được khởi công xây dựng bên bờ sông Sài Gòn bởi tập đoàn Vingroup cùng các đơn vị thiết kế và thi công quốc tế.
-        </div>
-        <div class="timeline-item">
-          <b>Tháng 4/2018 (Cất nóc):</b> Hoàn thiện phần kết cấu chính và lắp đặt đỉnh tháp, chính thức vượt qua kỷ lục chiều cao trước đó tại Việt Nam.
-        </div>
-        <div class="timeline-item">
-          <b>Ngày 26/07/2018 (Khánh thành):</b> Mở cửa khu trung tâm thương mại đầu tiên nhân dịp kỷ niệm thành lập tập đoàn, thu hút hàng vạn người dân đến tham quan.
-        </div>
-        <div class="timeline-item">
-          <b>Tháng 4/2019 (Mở cửa SkyView):</b> Khánh thành đài quan sát trên những tầng cao nhất, hoàn thiện toàn bộ trải nghiệm tham quan trên không.
-        </div>
+      <div class="stat-chips">
+        <div class="stat-chip"><strong>461,2m</strong><span>Chiều cao</span></div>
+        <div class="stat-chip"><strong>81 Tầng</strong><span>3 tầng hầm</span></div>
+        <div class="stat-chip"><strong>25 Khối</strong><span>Cấu trúc bó tre</span></div>
       </div>
     </div>
 
-    <!-- 4. Khu vực Hình ảnh -->
-    <div class="box">
-      <h2>📸 Hình ảnh nổi bật</h2>
-      <div class="gallery">
-        <figure class="image-card">
-          <img src="https://cdn.phototourl.com/anon/2026-11-26-647a5313-018e-4a8d-a051-c1c84084a285.jpg" alt="Landmark 81 lúc bình minh">
-          <figcaption class="caption">Landmark 81 lúc bình minh. Nguồn: Son Truong / Getty Images</figcaption>
-        </figure>
-
-        <figure class="image-card">
-          <img src="https://cdn.phototourl.com/anon/2026-11-26-60cf6c31-a52f-494b-a172-d2c8644eac98.jpg" alt="Landmark 81 lúc buổi đêm">
-          <figcaption class="caption">Landmark 81 rực sáng về đêm.</figcaption>
-        </figure>
-      </div>
+    <div class="tower-visual">
+      <div class="spire-beam"></div>
+      <div class="bamboo-tube t1"></div>
+      <div class="bamboo-tube t2"></div>
+      <div class="bamboo-tube t3"></div>
+      <div class="bamboo-tube t4"></div>
+      <div class="bamboo-tube t5"></div>
+      <div class="bamboo-tube t6"></div>
+      <div class="bamboo-tube t7"></div>
     </div>
+  </section>
 
-    <!-- 5. Khu vực Video tự động phát khi lướt tới -->
-    <div class="box">
-      <h2>🎬 Video toàn cảnh Landmark 81</h2>
-      <div class="video-box">
-        <video id="landmarkVideo" src="https://files.catbox.moe/8hr177.mp4" controls muted loop playsinline preload="metadata"></video>
-      </div>
-      <p class="video-note">Video tự động phát khi lướt tới • Bấm vào biểu tượng loa trên khung phát để bật tiếng.</p>
+  <!-- Thân tòa nhà chia theo từng phân tầng -->
+  <main class="tower-container">
+    <div class="tower-spine">
+
+      <!-- TẦNG 81: MÔ TẢ TỔNG QUAN -->
+      <section class="floor-section" id="tang-81" data-alt="461,2m">
+        <span class="floor-tag">TẦNG 81</span>
+        <div class="section-header">
+          <h2>🏙️ Mô tả tổng quan công trình</h2>
+          <span class="meter-badge">Độ cao: 461,2 mét</span>
+        </div>
+        <p>
+          <b>Landmark 81</b> tọa lạc tại trung tâm khu đô thị Vinhomes Central Park (số 720A Điện Biên Phủ, quận Bình Thạnh, TP. Hồ Chí Minh).
+          Đây là tòa nhà cao nhất Việt Nam và thuộc nhóm các công trình cao nhất Đông Nam Á, giữ vai trò như trái tim thương mại,
+          nghỉ dưỡng và biểu tượng hiện đại của thành phố mang tên Bác.
+        </p>
+      </section>
+
+      <!-- TẦNG 42: CẤU TRÚC & KIẾN TRÚC -->
+      <section class="floor-section" id="tang-42" data-alt="280m">
+        <span class="floor-tag">TẦNG 42</span>
+        <div class="section-header">
+          <h2>🏗️ Cấu trúc & Phân khu kiến trúc</h2>
+          <span class="meter-badge">25 khối ống bó tre</span>
+        </div>
+        <p>
+          Thiết kế của tòa nhà lấy cảm hứng từ hình ảnh <b>bó tre truyền thống Việt Nam</b> gồm 25 khối ống vuông cao thấp khác nhau chụm lại,
+          biểu trưng cho tinh thần đoàn kết và khát vọng vươn cao. Toàn bộ mặt ngoài sử dụng kính <b>Low-E</b> cách nhiệt, cản tia UV và phản chiếu ánh sáng rực rỡ.
+        </p>
+        <div class="zone-grid">
+          <div class="zone-card">
+            <h4>🔭 Tầng 79 – 81: Đài quan sát SkyView</h4>
+            <p>Trải nghiệm ngắm toàn cảnh Sài Gòn 360 độ từ độ cao gần 400m cùng cầu kính SkyTouch.</p>
+          </div>
+          <div class="zone-card">
+            <h4>🏨 Tầng 42 – 76: Khách sạn 5 sao</h4>
+            <p>Hệ thống phòng nghỉ dưỡng cao cấp chuẩn quốc tế với tầm nhìn hướng sông Sài Gòn.</p>
+          </div>
+          <div class="zone-card">
+            <h4>🏢 Tầng 06 – 40: Khu căn hộ hiện đại</h4>
+            <p>Tổ hợp căn hộ sang trọng, căn hộ dịch vụ và hệ thống tiện ích khép kín trên cao.</p>
+          </div>
+          <div class="zone-card">
+            <h4>🛍️ Tầng B1 – 05: Trung tâm thương mại</h4>
+            <p>Vincom Center với rạp chiếu phim, sân trượt băng trong nhà và thiên đường ẩm thực.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TẦNG 18: LỊCH SỬ XÂY DỰNG -->
+      <section class="floor-section" id="tang-18" data-alt="145m">
+        <span class="floor-tag">TẦNG 18</span>
+        <div class="section-header">
+          <h2>📜 Lịch sử hình thành & Cột mốc</h2>
+          <span class="meter-badge">2014 – 2019</span>
+        </div>
+        <div class="history-list">
+          <div class="history-step">
+            <span class="year-pill">Năm 2014</span>
+            <div><b>Khởi công xây dựng:</b> Chính thức đặt nền móng bên bờ sông Sài Gòn bởi tập đoàn Vingroup cùng các nhà thầu và đơn vị tư vấn quốc tế.</div>
+          </div>
+          <div class="history-step">
+            <span class="year-pill">04 / 2018</span>
+            <div><b>Lễ cất nóc kỷ lục:</b> Hoàn thiện kết cấu lõi và lắp đặt đỉnh tháp, chính thức vượt qua mọi kỷ lục chiều cao trước đó tại Việt Nam.</div>
+          </div>
+          <div class="history-step">
+            <span class="year-pill">26/07/2018</span>
+            <div><b>Khánh thành chính thức:</b> Khai trương khu trung tâm thương mại nhân dịp kỷ niệm thành lập tập đoàn, thu hút hàng vạn lượt khách tham quan.</div>
+          </div>
+          <div class="history-step">
+            <span class="year-pill">04 / 2019</span>
+            <div><b>Mở cửa Landmark 81 SkyView:</b> Đưa đài quan sát trên ba tầng cao nhất đi vào hoạt động, hoàn thiện trải nghiệm tham quan trên không.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TẦNG 05: THƯ VIỆN HÌNH ẢNH 3D -->
+      <section class="floor-section" id="tang-05" data-alt="45m">
+        <span class="floor-tag">TẦNG 05</span>
+        <div class="section-header">
+          <h2>📸 Góc nhìn Bình minh & Đêm hội</h2>
+          <span class="meter-badge">Hiệu ứng 3D Tilt</span>
+        </div>
+        <div class="gallery-grid">
+          <figure class="tilt-card">
+            <img src="https://cdn.phototourl.com/anon/2026-11-26-647a5313-018e-4a8d-a051-c1c84084a285.jpg" alt="Landmark 81 lúc bình minh">
+            <figcaption class="tilt-caption">Landmark 81 lúc bình minh. Nguồn: Son Truong / Getty Images</figcaption>
+          </figure>
+
+          <figure class="tilt-card">
+            <img src="https://cdn.phototourl.com/anon/2026-11-26-60cf6c31-a52f-494b-a172-d2c8644eac98.jpg" alt="Landmark 81 rực sáng về đêm">
+            <figcaption class="tilt-caption">Landmark 81 rực sáng về đêm.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- TẦNG B1: VIDEO TOÀN CẢNH TỰ PHÁT -->
+      <section class="floor-section" id="tang-b1" data-alt="0m">
+        <span class="floor-tag">TẦNG B1</span>
+        <div class="section-header">
+          <h2>🎬 Video toàn cảnh Landmark 81</h2>
+          <span class="meter-badge">Tự động phát</span>
+        </div>
+        <div class="video-frame">
+          <video id="landmarkVideo" src="https://files.catbox.moe/8hr177.mp4" controls muted loop playsinline preload="metadata"></video>
+        </div>
+        <p class="video-hint">Video tự động phát khi cuộn tới • Nhấn vào biểu tượng loa để mở âm thanh.</p>
+      </section>
+
     </div>
-  </div>
+  </main>
 
-  <!-- Nút Thành viên nhóm ở dưới cùng -->
+  <!-- Nút Thành viên nhóm -->
   <footer>
-    <button class="btn" onclick="moDanhSach()">🎁 Thành viên nhóm</button>
+    <button class="team-trigger" onclick="openTeamModal()">🎁 Thành viên nhóm</button>
   </footer>
 
-  <!-- Hộp thoại danh sách thành viên -->
-  <div class="modal" id="groupModal" onclick="dongDanhSach(event)">
-    <div class="modal-content">
+  <!-- Modal Danh sách thành viên -->
+  <div class="modal-backdrop" id="teamModal" onclick="closeTeamModal(event)">
+    <div class="modal-box">
       <h3>🎄 THÀNH VIÊN NHÓM 🎄</h3>
-      <ul>
-        <li>1. <span class="crown">👑</span> <b>Hà Văn Thành</b></li>
+      <ul class="member-list">
+        <li>1. <span class="crown-anim">👑</span> <b>Hà Văn Thành</b></li>
         <li>2. Tạ Nữ Yến Nhi</li>
         <li>3. Nguyễn Thị Hoài Linh</li>
         <li>4. Nguyễn Hoài Băng</li>
       </ul>
-      <button class="btn" style="width: 100%;" onclick="document.getElementById('groupModal').style.display='none'">Đóng</button>
+      <button class="team-trigger" style="width: 100%;" onclick="document.getElementById('teamModal').style.display='none'">Đóng</button>
     </div>
   </div>
 
   <script>
-    // 1. Tạo dải đèn nháy Noel trên cùng
-    const lightsContainer = document.getElementById("noelLights");
-    for (let i = 0; i < 24; i++) {
-      const bulb = document.createElement("span");
-      bulb.className = "bulb";
-      lightsContainer.appendChild(bulb);
+    // 1. Tạo dải đèn nháy Noel
+    const wire = document.getElementById("noelWire");
+    for (let i = 0; i < 28; i++) {
+      const b = document.createElement("span");
+      b.className = "bulb";
+      wire.appendChild(b);
     }
 
-    // 2. Đồng hồ thời gian thực & lời chào
-    function capNhatThoiGian() {
+    // 2. Đồng hồ thời gian thực & lời chào theo buổi
+    function updateClock() {
       const now = new Date();
-      const gio = now.getHours();
-      let loiChao = "";
+      const h = now.getHours();
+      let greet = "Chào buổi tối 🌙";
+      if (h >= 5 && h < 11) greet = "Chào buổi sáng ⛅️";
+      else if (h >= 11 && h < 14) greet = "Chào buổi trưa ☀️";
+      else if (h >= 14 && h < 18) greet = "Chào buổi chiều 🌤️";
 
-      if (gio >= 5 && gio < 11) {
-        loiChao = "Chào buổi sáng ⛅️";
-      } else if (gio >= 11 && gio < 14) {
-        loiChao = "Chào buổi trưa ☀️";
-      } else if (gio >= 14 && gio < 18) {
-        loiChao = "Chào buổi chiều 🌤️";
-      } else {
-        loiChao = "Chào buổi tối 🌙";
-      }
-
-      const thoiGian = now.toLocaleTimeString("vi-VN") + " - " + now.toLocaleDateString("vi-VN");
-      document.getElementById("clock").innerHTML = `<b>${loiChao}</b> | ${thoiGian}`;
+      document.getElementById("clockText").innerHTML =
+        `<b>${greet}</b> • ${now.toLocaleTimeString("vi-VN")} (${now.toLocaleDateString("vi-VN")})`;
     }
-    setInterval(capNhatThoiGian, 1000);
-    capNhatThoiGian();
+    setInterval(updateClock, 1000);
+    updateClock();
 
-    // 3. Chuyển chế độ Sáng / Tối
-    function doiGiaoDien() {
+    // 3. Tùy biến giao diện Sáng / Tối & Sắc thái ánh sáng tháp
+    function toggleDark() {
       document.body.classList.toggle("dark");
-      const btn = document.getElementById("themeBtn");
-      if (document.body.classList.contains("dark")) {
-        btn.innerText = "☀️ Chế độ sáng";
-      } else {
-        btn.innerText = "🌙 Chế độ tối";
-      }
+      const btn = document.getElementById("themeToggleBtn");
+      btn.innerText = document.body.classList.contains("dark") ? "☀️ Chế độ sáng" : "🌙 Chế độ tối";
     }
 
-    // 4. Mở / Đóng danh sách thành viên
-    function moDanhSach() {
-      document.getElementById("groupModal").style.display = "flex";
-    }
-    function dongDanhSach(e) {
-      if (e.target.id === "groupModal") {
-        document.getElementById("groupModal").style.display = "none";
-      }
+    function setAccent(themeClass) {
+      document.body.classList.remove("theme-green", "theme-gold");
+      if (themeClass) document.body.classList.add(themeClass);
     }
 
-    // 5. Tự động phát video khi lướt tới khung nhìn
-    const video = document.getElementById("landmarkVideo");
-    const observer = new IntersectionObserver((entries) => {
+    // 4. Bật / Tắt tuyết rơi động
+    let snowEnabled = true;
+    const snowChars = ["❄", "❅", "❆"];
+    function toggleSnow() {
+      snowEnabled = !snowEnabled;
+      document.getElementById("snowToggleBtn").innerText = snowEnabled ? "❄️ Tuyết: Bật" : "❄️ Tuyết: Tắt";
+    }
+
+    setInterval(() => {
+      if (!snowEnabled) return;
+      const flake = document.createElement("div");
+      flake.className = "snowflake";
+      flake.innerText = snowChars[Math.floor(Math.random() * snowChars.length)];
+      flake.style.left = Math.random() * 100 + "vw";
+      flake.style.fontSize = (Math.random() * 13 + 10) + "px";
+      flake.style.opacity = Math.random() * 0.65 + 0.35;
+      flake.style.animationDuration = (Math.random() * 4 + 4.5) + "s";
+      document.body.appendChild(flake);
+      setTimeout(() => flake.remove(), 8500);
+    }, 300);
+
+    // 5. Hiệu ứng xuất hiện từng tầng & Thang máy đo độ cao khi cuộn
+    const sections = document.querySelectorAll(".floor-section");
+    const floorNodes = document.querySelectorAll(".floor-node");
+    const altitudeDisplay = document.getElementById("altitudeDisplay");
+    const shaftProgress = document.getElementById("shaftProgress");
+
+    const sectionObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          video.play().catch(() => {});
-        } else {
-          video.pause();
+          entry.target.classList.add("visible");
+          const alt = entry.target.getAttribute("data-alt");
+          if (alt) altitudeDisplay.innerText = "Độ cao: " + alt;
+
+          const id = entry.target.getAttribute("id");
+          floorNodes.forEach((node) => {
+            node.classList.toggle("active", node.getAttribute("href") === "#" + id);
+          });
         }
       });
+    }, { threshold: 0.35 });
+
+    sections.forEach((sec) => sectionObserver.observe(sec));
+
+    window.addEventListener("scroll", () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const percent = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+      shaftProgress.style.height = percent + "%";
+    });
+
+    // 6. Hiệu ứng nghiêng 3D (Tilt) khi di chuột vào thẻ ảnh
+    document.querySelectorAll(".tilt-card").forEach((card) => {
+      card.addEventListener("mousemove", (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `perspective(700px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg) scale(1.02)`;
+      });
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = "perspective(700px) rotateY(0deg) rotateX(0deg) scale(1)";
+      });
+    });
+
+    // 7. Tự động phát video khi lướt tới
+    const video = document.getElementById("landmarkVideo");
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) video.play().catch(() => {});
+        else video.pause();
+      });
     }, { threshold: 0.5 });
+    videoObserver.observe(video);
 
-    observer.observe(video);
-
-    // 6. Hiệu ứng tuyết rơi xoay nhẹ
-    const snowIcons = ["❄", "❅", "❆"];
-    function taoTuyet() {
-      const tuyet = document.createElement("div");
-      tuyet.className = "snowflake";
-      tuyet.innerText = snowIcons[Math.floor(Math.random() * snowIcons.length)];
-      tuyet.style.left = Math.random() * 100 + "vw";
-      tuyet.style.fontSize = (Math.random() * 12 + 10) + "px";
-      tuyet.style.opacity = Math.random() * 0.6 + 0.4;
-      tuyet.style.animationDuration = (Math.random() * 4 + 4) + "s";
-      document.body.appendChild(tuyet);
-
-      setTimeout(() => {
-        tuyet.remove();
-      }, 8000);
+    // 8. Mở / Đóng danh sách thành viên nhóm
+    function openTeamModal() {
+      document.getElementById("teamModal").style.display = "flex";
     }
-    setInterval(taoTuyet, 320);
+    function closeTeamModal(e) {
+      if (e.target.id === "teamModal") {
+        document.getElementById("teamModal").style.display = "none";
+      }
+    }
   </script>
-
 </body>
 </html>
