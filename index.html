@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Landmark 81 - Kiến Trúc Tòa Tháp </title>
+  <title>Landmark 81 - Kiến Trúc Tòa Tháp & Giáng Sinh</title>
   <style>
     /* ================= HỆ THỐNG BIẾN MÀU ULTRA & CHỦ ĐỀ NOEL ================= */
     :root {
@@ -105,6 +105,79 @@
       line-height: 1.65;
       overflow-x: hidden;
       transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    /* ================= CON TRỎ CHUỘT ICON 👆 & HIỆU ỨNG BĂNG ================= */
+    @media (hover: hover) and (pointer: fine) {
+      *, *::before, *::after {
+        cursor: none !important;
+      }
+    }
+
+    .ice-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      font-size: 26px;
+      line-height: 1;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -10%);
+      filter: drop-shadow(0 0 6px #38bdf8) drop-shadow(0 0 12px #bae6fd);
+      transition: transform 0.08s ease-out, filter 0.2s ease;
+      display: none;
+    }
+
+    .ice-cursor.clicking {
+      transform: translate(-50%, -10%) scale(0.82) rotate(-10deg);
+      filter: drop-shadow(0 0 10px #7dd3fc) drop-shadow(0 0 20px #ffffff);
+    }
+
+    .ice-particle {
+      position: fixed;
+      pointer-events: none;
+      user-select: none;
+      z-index: 9998;
+      color: #e0f2fe;
+      text-shadow: 0 0 6px #38bdf8, 0 0 12px #0284c7;
+      animation: iceFade 0.85s ease-out forwards;
+    }
+
+    @keyframes iceFade {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 18px))) scale(0.2) rotate(140deg);
+      }
+    }
+
+    .ice-ring {
+      position: fixed;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #7dd3fc;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #38bdf8, inset 0 0 6px #bae6fd;
+      pointer-events: none;
+      z-index: 9997;
+      transform: translate(-50%, -50%);
+      animation: iceBurst 0.55s ease-out forwards;
+    }
+
+    @keyframes iceBurst {
+      0% {
+        width: 10px;
+        height: 10px;
+        opacity: 0.95;
+      }
+      100% {
+        width: 54px;
+        height: 54px;
+        opacity: 0;
+      }
     }
 
     /* Lưới bản vẽ kiến trúc chìm cực nhẹ */
@@ -272,7 +345,6 @@
       border-radius: 99px;
       font-size: 13px;
       font-weight: 700;
-      cursor: pointer;
       transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
     }
 
@@ -305,7 +377,6 @@
       height: 16px;
       border-radius: 50%;
       border: 2px solid rgba(255, 255, 255, 0.9);
-      cursor: pointer;
       transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
     }
@@ -789,7 +860,6 @@
       border-radius: 99px;
       font-size: 15px;
       font-weight: 800;
-      cursor: pointer;
       box-shadow: 0 10px 28px var(--glow), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.8);
       transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
     }
@@ -921,6 +991,9 @@
   </style>
 </head>
 <body>
+
+  <!-- Con trỏ chuột icon 👆 phát sáng băng -->
+  <div class="ice-cursor" id="iceCursor">👆</div>
 
   <!-- Khối cầu ánh sáng khúc xạ nền -->
   <div class="ambient-orb orb-1"></div>
@@ -1153,7 +1226,59 @@
       if (themeClass) document.body.classList.add(themeClass);
     }
 
-    // 4. Ánh phản chiếu khúc xạ theo vị trí chuột trên bề mặt kính
+    // 4. Con trỏ chuột icon 👆 & hiệu ứng băng tinh thể khi di chuyển / click
+    const iceCursor = document.getElementById("iceCursor");
+    const iceSymbols = ["❄", "✦", "✧", "💎", "❅"];
+    let lastIceTime = 0;
+
+    function spawnIceTrail(x, y) {
+      const p = document.createElement("span");
+      p.className = "ice-particle";
+      p.innerText = iceSymbols[Math.floor(Math.random() * iceSymbols.length)];
+      p.style.left = x + "px";
+      p.style.top = y + "px";
+      p.style.fontSize = (Math.random() * 9 + 10) + "px";
+      p.style.setProperty("--dx", (Math.random() * 34 - 17) + "px");
+      p.style.setProperty("--dy", (Math.random() * 24 + 10) + "px");
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 850);
+    }
+
+    window.addEventListener("mousemove", (e) => {
+      iceCursor.style.display = "block";
+      iceCursor.style.left = e.clientX + "px";
+      iceCursor.style.top = e.clientY + "px";
+
+      const now = Date.now();
+      if (now - lastIceTime > 45) {
+        spawnIceTrail(e.clientX, e.clientY + 6);
+        lastIceTime = now;
+      }
+    }, { passive: true });
+
+    window.addEventListener("mouseleave", () => {
+      iceCursor.style.display = "none";
+    });
+
+    window.addEventListener("mousedown", (e) => {
+      iceCursor.classList.add("clicking");
+      const ring = document.createElement("span");
+      ring.className = "ice-ring";
+      ring.style.left = e.clientX + "px";
+      ring.style.top = e.clientY + "px";
+      document.body.appendChild(ring);
+      setTimeout(() => ring.remove(), 550);
+
+      for (let i = 0; i < 6; i++) {
+        spawnIceTrail(e.clientX, e.clientY);
+      }
+    });
+
+    window.addEventListener("mouseup", () => {
+      iceCursor.classList.remove("clicking");
+    });
+
+    // 5. Ánh phản chiếu khúc xạ theo vị trí chuột trên bề mặt kính
     document.querySelectorAll(".liquid-interactive").forEach((el) => {
       el.addEventListener("mousemove", (e) => {
         const rect = el.getBoundingClientRect();
@@ -1162,7 +1287,7 @@
       }, { passive: true });
     });
 
-    // 5. Hiệu ứng tuyết rơi bông tuyết xoay nhẹ như cũ
+    // 6. Hiệu ứng tuyết rơi bông tuyết xoay nhẹ như cũ
     let snowEnabled = true;
     const snowChars = ["❄", "❅", "❆"];
     function toggleSnow() {
@@ -1183,7 +1308,7 @@
       setTimeout(() => tuyet.remove(), 8500);
     }, 320);
 
-    // 6. Hiệu ứng xuất hiện từng tầng & Thang máy cuộn mượt
+    // 7. Hiệu ứng xuất hiện từng tầng & Thang máy cuộn mượt
     const sections = document.querySelectorAll(".floor-section");
     const floorNodes = document.querySelectorAll(".floor-node");
     const shaftProgress = document.getElementById("shaftProgress");
@@ -1216,7 +1341,7 @@
       }
     }, { passive: true });
 
-    // 7. Hiệu ứng nghiêng 3D (Tilt) mượt cho thẻ ảnh
+    // 8. Hiệu ứng nghiêng 3D (Tilt) mượt cho thẻ ảnh
     document.querySelectorAll(".tilt-card").forEach((card) => {
       card.addEventListener("mousemove", (e) => {
         const rect = card.getBoundingClientRect();
@@ -1229,7 +1354,7 @@
       });
     });
 
-    // 8. Tự động phát video khi lướt tới
+    // 9. Tự động phát video khi lướt tới
     const video = document.getElementById("landmarkVideo");
     const videoObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -1239,7 +1364,7 @@
     }, { threshold: 0.5 });
     videoObserver.observe(video);
 
-    // 9. Mở / Đóng danh sách thành viên nhóm
+    // 10. Mở / Đóng danh sách thành viên nhóm
     function openTeamModal() {
       document.getElementById("teamModal").style.display = "flex";
     }
